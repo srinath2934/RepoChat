@@ -280,7 +280,7 @@ def load_github_repo(repo_url: str, branch: str = "main") -> tuple:
     except Exception as e:
         return None, None, str(e), None
 
-def get_file_list_from_vectorstore(vectorstore: EndeeInternalContextStore) -> str:
+def get_file_list_from_vectorstore(vectorstore: EndeeVectorEngine) -> str:
     """Get all unique files from the Endee vectorstore metadata"""
     try:
         index_name = st.session_state.get('current_index')
@@ -352,7 +352,7 @@ def get_file_list_from_vectorstore(vectorstore: EndeeInternalContextStore) -> st
         logger.error(traceback.format_exc())
         return f"Unable to retrieve file list. Error: {str(e)}"
 
-def generate_answer(query: str, vectorstore: EndeeInternalContextStore, llm) -> Dict:
+def generate_answer(query: str, vectorstore: EndeeVectorEngine, llm) -> Dict:
     """Generate answer using RAG"""
     try:
         # Special case: Detect file listing questions
