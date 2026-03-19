@@ -44,7 +44,8 @@ class GitHubLoader:
         access_token: Optional[str] = None,
         file_extensions: Tuple[str, ...] = (
             ".py", ".js", ".md", ".yaml", ".yml", 
-            ".json", ".toml", ".sql", ".dockerfile", ".css", ".ipynb"
+            ".json", ".toml", ".sql", ".dockerfile", ".css", ".ipynb",
+            ".h", ".hpp", ".cpp", ".ipp", ".c", ".cc"
         ),
         max_file_size_bytes: int = 1_048_576,  # 1 MiB
         github_api_url: str = "https://api.github.com",
@@ -274,6 +275,9 @@ class GitHubLoader:
                 raw = data.get("content", "")
             
             metadata = self._build_metadata(item, placeholder=False)
+            # Endee specifically looks for 'content' in the meta-blob, but we'll 
+            # ensure 'source' and 'url' are also prominent
+            metadata["content"] = raw
             return Document(page_content=raw, metadata=metadata)
         except Exception as e:
             logger.error("Exception loading file %s: %s", path, str(e))

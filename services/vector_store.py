@@ -64,13 +64,17 @@ class EndeeVectorEngine:
         """
         vectors = []
         for i, (doc, emb) in enumerate(zip(documents, embeddings)):
+            # Handle both Document objects (converted to dict) and direct dicts
+            page_content = doc.get("page_content", "")
+            metadata = doc.get("metadata", {})
+            
             # Endee expected format for /vector/insert
             vectors.append({
                 "id": str(i),
                 "vector": [float(v) for v in emb],
                 "meta": json.dumps({
-                    "content": doc.get("page_content", ""),
-                    "metadata": doc.get("metadata", {})
+                    "content": page_content,
+                    "metadata": metadata
                 })
             })
 
