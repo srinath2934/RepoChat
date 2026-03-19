@@ -75,6 +75,27 @@ sequenceDiagram
 
 ---
 
+## 📸 Interface & Demo
+
+### **🖥️ Application Landing Page**
+![Landing Page](docs/screenshots/landing_page.png)
+
+### **📥 Repository Loading Process**
+*The system uses multi-threaded ingestion to fetch and analyze your codebase in seconds.*
+![Repo Loaded](docs/screenshots/repo_loaded.png)
+
+### **💬 Intelligent Q&A with Citations**
+*Get precise answers with direct links back to the source code managed by Endee.*
+![AI Response](docs/screenshots/ai_response.png)
+
+---
+
+## 🎥 Video Walkthrough
+*(Placeholder for screen recording - Recommend recording a 1-minute demo of you loading a repo and asking a question!)*
+> [Watch the Demo Video](docs/video_demo.mp4)
+
+---
+
 ## 📦 Getting Started
 
 ### 1. 🛡️ Prerequisites
