@@ -257,8 +257,8 @@ def load_github_repo(repo_url: str, branch: str = "main") -> tuple:
             if not vectorstore.check_health():
                 return None, None, f"Endee Engine is not running on {vectorstore.host}. Please start it using Docker.", None
             
-            # Create index for this repo (slugify the name)
-            index_name = repo_url.replace("/", "_").replace("-", "_")
+            # Create index for this repo (slugify the name aggressively)
+            index_name = "".join(c if c.isalnum() else "_" for c in repo_url)
             vectorstore.create_index(index_name, dimension=384) # 384 for all-MiniLM-L6-v2
             
             # 🌟 FIX: Extract texts for embedding first

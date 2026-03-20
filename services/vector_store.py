@@ -110,7 +110,8 @@ class EndeeVectorEngine:
                 import msgpack
                 # Endee typically returns a list of results when using the /search endpoint
                 try:
-                    results = msgpack.unpackb(response.content)
+                    # CRITICAL: use raw=False to get strings instead of bytes
+                    results = msgpack.unpackb(response.content, raw=False)
                 except Exception:
                     # Fallback to JSON if msgpack fails
                     results = response.json()
@@ -121,18 +122,16 @@ class EndeeVectorEngine:
                 
                 formatted_results = []
                 for res in results:
-                    # Endee returns a list for each result: [distance, id, meta, ...]
-                    # or it returns a dict. We handle both.
+                    # Endee returns a list for each result: [distance, id, meta, ...] or a dict.
                     
                     if isinstance(res, list):
-                        # Typcial Endee List format: [distance, id, meta]
-                        # Based on our inspect: [float, val, val, json_str]
                         try:
-                            # We look for the JSON string in the list
                             meta_raw = "{}"
                             for item in res:
-                                if isinstance(item, str) and item.startswith('{"'):
-                                    meta_raw = item
+                                # Handle both string and bytes (if raw=False wasn't enough)
+                                val = item.decode('utf-8') if isinstance(item, bytes) else item
+                                if isinstance(val, str) and val.strip().startswith('{"'):
+                                    meta_raw = val
                                     break
                             score = res[0] if len(res) > 0 else 0
                         except Exception:
@@ -140,7 +139,8 @@ class EndeeVectorEngine:
                             score = 0
                     else:
                         # Fallback for dictionary format
-                        meta_raw = res.get('meta') or res.get('metadata') or res.get('m') or "{}"
+                        m = res.get('meta') or res.get('metadata') or res.get('m') or "{}"
+                        meta_raw = m.decode('utf-8') if isinstance(m, bytes) else m
                         score = res.get("distance", res.get("score", 0))
                     
                     try:
