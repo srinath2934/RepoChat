@@ -40,6 +40,8 @@ graph TD
     E
     H
     end
+```
+
 ---
 
 ## 🧠 How Endee x RAG Works
