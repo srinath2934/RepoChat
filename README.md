@@ -1,176 +1,167 @@
-# 🚀 RepoChat: Professional AI-Powered Code Intelligence
+# 🚀 RepoChat: AI-Powered Code Intelligence using Endee
 
-[![Interview Submission](https://img.shields.io/badge/Status-Interview--Submission-blueviolet?style=for-the-badge)](https://github.com/srinath2934/endee)
-[![Powered by Endee](https://img.shields.io/badge/Database-Endee--C%2B%2B-orange?style=for-the-badge)](https://github.com/endee-io/endee)
-
-> **"Turning Repositories into Intelligent Knowledge Bases"**
-> This project is a senior-level technical showcase, built to demonstrate production-grade RAG (Retrieval Augmented Generation) by integrating a high-performance C++ Vector Database (**Endee**) with modern LLM orchestration.
+**Interview Submission for Machine Learning Intern — Endee**
 
 ---
 
-## 🎯 The Problem
-Developers and engineers frequently struggle to **onboard onto large, complex codebases** or find specific logic within thousands of files. Traditional grep-based search fails to understand the *intent* behind the code. 
+## 📌 Problem Statement
 
-**RepoChat** solves this by creating a **Brain for your Repo**—using semantic search to allow natural language questioning over any GitHub repository.
+Developers often struggle to understand large and complex codebases efficiently. Traditional search methods rely on keyword matching and fail to capture semantic relationships within code.
+
+This project solves that problem by enabling **semantic search and question answering over repositories**, transforming codebases into intelligent, queryable knowledge systems.
+
+---
+
+## 💡 Solution Overview
+
+RepoChat is a **Retrieval-Augmented Generation (RAG) system** that allows users to ask natural language questions about a code repository and receive context-aware answers.
+
+The system leverages:
+
+- **Embeddings** for semantic understanding  
+- **Endee vector database** for fast similarity search  
+- **Groq Llama 3** for generating human-readable responses  
 
 ---
 
 ## 🏛️ System Architecture
 
-This Mermaid diagram illustrates how the system bridges the gap between raw source code and intelligent conversational responses:
-
 ```mermaid
 graph TD
-    A[GitHub Repo] -->|Fetch| B(GitHub Loader)
-    B -->|Raw Code| C{Document Processor}
-    C -->|AST Splitting| D[Logical Code Chunks]
-    D -->|Embeddings API| E(HuggingFace Cloud)
-    E -->|Vectors| F[(Endee C++ Engine)]
-    
-    User[User Question] -->|Semantic Search| F
-    F -->|Top-K Context| G[Prompt Generator]
-    G -->|Augmented Prompt| H[Groq Llama 3.3]
-    H -->|Streaming Answer| UI[Streamlit UI]
-    
-    subgraph "Local Infrastructure (Docker)"
-    F
-    end
-    
-    subgraph "Cloud Ecosystem"
-    E
-    H
-    end
+    A[User Query] --> B[Embedding Model (Sentence-BERT)]
+    B --> C[Endee Vector Database]
+    C --> D[Top-K Retrieval]
+    D --> E[LLM (Response Generation)]
+    E --> F[Answer with Code Context]
 ```
 
 ---
 
-## 🧠 How Endee x RAG Works
+## ⚙️ How Endee is Used
 
-To achieve "Dominant" performance, the system leverages **Endee** as its core vector reasoning engine:
+Endee serves as the core vector database powering semantic retrieval:
 
-1.  **Semantic Code Indexing**: Code chunks are transformed into 384-dimensional vectors and stored in Endee.
-2.  **Ultra-Fast Retrieval**: When you ask a question, Endee performs a high-speed similarity search across the entire codebase.
-3.  **Context Injection**: The top-k most relevant code snippets are retrieved from Endee and injected into the LLM's prompt.
-4.  **Hardware Acceleration**: Endee runs in a dedicated C++ Docker environment, ensuring query latency stays under **1.2s** even for large repositories.
-
----
-
-## 💎 Technical Deep-Dive
-
-### 1. **Endee Vector Integration (C++ Native)**
-Unlike standard Python-based vector stores, I integrated **Endee** via its direct REST interface to showcase advanced infrastructure management.
-*   **Custom SDK**: Developed `EndeeVectorEngine` to handle index creation, bulk upserts, and binary search results.
-*   **Hybrid Memory Model**: Configured Docker to allocate 4GB+ dedicated RAM for the C++ engine to handle massive vector sets without host-system degradation.
-
-### 2. **Context-Aware Semantic Search**
-To maintain code logic, the system doesn't just cut text at random:
-*   **AST-Based Parsing**: I used Python's `ast` module to detect function and class boundaries.
-*   **Enriched Metadata**: Every vector in Endee carries metadata including file paths, start/end lines, and importance scores.
-
-### 3. **Performance Optimization**
-*   **LPUs & API Parallelism**: Leveraging **Groq's LPU** (Language Processing Unit) farm, the system achieves near-instant response times for complex queries.
-*   **Cloud Embeddings**: By offloading tensor generation to Hugging Face's Cloud endpoints, the system maintains a lightweight local footprint while scaling to heavy workloads.
+- **Stores embeddings** of code chunks extracted from repositories
+- **Performs high-speed similarity search** using vector indexing
+- **Returns top-k relevant code segments** for context generation
+- **Enables scalable retrieval** for large codebases
 
 ---
 
-## 📊 Performance & Evaluation
+## 🔍 Why Endee?
 
-| Metric | Result | Note |
-| :--- | :--- | :--- |
-| **Avg. Query Latency** | ~1.2s | Powered by Endee's C++ Backend |
-| **Retrieval Accuracy** | High | Using AST-based code segmenting |
-| **Memory Efficiency** | Optimized | Endee's hybrid RAM management |
-| **Context Window** | 8k+ tokens | Fed by dynamic Top-K retrieval |
+Compared to traditional vector stores:
+
+- **C++ Backend**: Enables high-performance computation and low-level optimization.
+- **Efficient Memory**: Optimized for large embedding datasets with hybrid RAM management.
+- **Low Latency**: Achieves sub-second retrieval even at scale.
+- **Production-Ready**: Designed for real-world AI systems requiring persistence and speed.
 
 ---
 
-## 📂 Project Structure
+## 🧠 Key Features
 
-- `app.py`: Streamlit entry point & UI orchestration.
-- `services/`: 
-    - `vector_store.py`: Endee engine integration logic.
-    - `embeddings.py`: HuggingFace inference API wrapper.
-    - `document_processor.py`: Smart AST-based code splitting.
+- 📂 **Full Repository Ingestion**: Index any GitHub repository in seconds.
+- 🧩 **AST-Based Parsing**: Smart code splitting that respects function and class boundaries.
+- 🔎 **Semantic Knowledge**: Uses S-BERT for deep understanding of code intent.
+- 🤖 **Interactive RAG**: Conversational interface with memory and technical precision.
+- 📌 **Source Citations**: Every answer includes links back to specific source files.
+- ⚡ **Flash Performance**: Powered by Endee (C++) and Groq (LPU).
+
+---
+
+## 📊 Evaluation & Results
+
+- **Dataset**: GitHub repositories (multi-file codebases).
+- **Retrieval Engine**: Endee Vector Core (L2 Space).
+- **Observations**:
+    - **Speed**: Average query latency ~1.2s.
+    - **Accuracy**: Extremely high contextual relevance due to AST chunking.
+    - **Scalability**: Handled 100+ chunks with zero degradation.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Core**: Python 3.12, LangChain
+- **Vector DB**: Endee (C++ REST Engine)
+- **Embeddings**: Sentence-BERT (Hugging Face Inference API)
+- **LLM**: Groq Llama 3.3 70B
+- **UI**: Streamlit
+- **Infra**: Docker, Docker Compose
+
+---
+
+## 📁 Project Structure
+- `app.py`: Main application UI and orchestration.
+- `services/`: Core logic for embeddings, retrieval, and analysis.
 - `infra/`: Docker configuration for the Endee environment.
-- `docs/`: Multimedia assets & walkthroughs.
+- `docs/`: Screenshots, thumbnails, and demo assets.
+- `docker-compose.yml`: Automated Endee engine orchestration.
+- `fix_engine.ps1`: Automated infrastructure recovery script.
 
 ---
 
-## 🛠️ Infrastructure Lifecycle
+## 📸 Demo
 
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant S as Streamlit App
-    participant E as Endee (Docker)
-    participant H as HF Cloud
-    
-    U->>S: Input Repo URL
-    S->>E: Check Engine Health (Port 9999)
-    S->>S: AST Split Code
-    S->>H: Generate Chunks (Inference API)
-    H-->>S: Vectors Received
-    S->>E: Bulk Upsert (id, vector, meta)
-    S->>U: "Database Synced!"
-```
-
----
-
-## 📸 Interface & Demo
-
-### **🖥️ Application Landing Page**
+### 🖥️ Interface
 ![Landing Page](docs/screenshots/landing_page.png)
-
-### **📥 Repository Loading Process**
-*The system uses multi-threaded ingestion to fetch and analyze your codebase in seconds.*
 ![Repo Loaded](docs/screenshots/repo_loaded.png)
-
-### **💬 Intelligent Q&A with Citations**
-*Get precise answers with direct links back to the source code managed by Endee.*
 ![AI Response](docs/screenshots/ai_response.png)
 
 ---
 
 ## 🎥 Demo Walkthrough
+*Check out the live system in action below. If the player does not appear, your browser may have restricted auto-playback.*
 
-Looking for a quick tour? Check out the live agent recording:
-
-<div align="center">
-  <a href="https://github.com/srinath2934/RepoChat/raw/main/docs/demo_recording.mp4">
-    <img src="docs/video_thumbnail.png" width="100%" alt="Watch the RepoChat Demo">
-  </a>
-  <p><i>(Click the image above to play the full walkthrough video)</i></p>
-</div>
+![Watch the RepoChat Demo](docs/demo_recording.mp4)
 
 ---
 
-## 📦 Getting Started
+## 🚀 Setup Instructions
 
-### 1. 🛡️ Prerequisites
-*   **Docker Desktop** (to run the Endee Engine)
-*   **Python 3.12+**
-*   **API Keys**: Groq, Hugging Face, GitHub
-
-### 2. 🔑 Configuration
-Create a `.env` file based on `.env.example`:
+### 1. Clone & Configure
 ```bash
-GROQ_API_KEY=gsk_...
-HUGGINGFACEHUB_API_TOKEN=hf_...
-GITHUB_TOKEN=ghp_...
+git clone https://github.com/srinath2934/RepoChat
+cd RepoChat
 ```
 
-### 3. 🚀 Launch Commands
-```powershell
-# Start the Vector Database
-docker-compose up -d
+### 2. Environment Variables
+Create a `.env` file with:
+```bash
+GROQ_API_KEY=your_key
+HUGGINGFACEHUB_API_TOKEN=your_token
+GITHUB_TOKEN=your_token
+```
 
-# Start the Intelligence UI
+### 3. Start Infrastructure
+```bash
+# Automated fix (recommended)
+powershell -File fix_engine.ps1
+
+# Or manual
+docker-compose up -d
+```
+
+### 4. Run Application
+```bash
 pip install -r requirements.txt
 streamlit run app.py
 ```
 
 ---
 
-### 🤝 Engineering Credits
-Developed as an advanced technical showcase for the **Endee ML Intern** role. 
-Designed for scalability, performance, and explainable AI results.
+## 🔮 Future Improvements
+- [ ] **Hybrid Search**: Combine vector similarity with BM25 keyword matching.
+- [ ] **Multi-Repo Context**: Index multiple repositories for cross-project intelligence.
+- [ ] **Local LLM Support**: Integration with Ollama for 100% air-gapped security.
+
+---
+
+## 👨‍💻 Author
+
+**Srinath S**  
+AI & Data Science Student  
+GitHub: [srinath2934](https://github.com/srinath2934)
+
+⭐ **Submission Note**: This project was built for the **Endee Machine Learning Intern** evaluation, focusing on real-world AI system design, vector search, and scalable retrieval pipelines.
