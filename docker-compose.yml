@@ -3,7 +3,7 @@ services:
     image: endee-oss:latest
     container_name: endee-oss
     ports:
-      - "8080:8080"
+      - "9999:8080"
     ulimits:
       nofile: 100000
 # ----------------------------------------------------
