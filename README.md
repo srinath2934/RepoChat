@@ -135,7 +135,7 @@ sequenceDiagram
 
 Looking for a quick tour? Check out the live agent recording:
 
-![Demo Walkthrough](docs/demo_recording.webp)
+[Watch the Demo Walkthrough Video 🎥](docs/demo_recording.mp4)
 
 ---
 
