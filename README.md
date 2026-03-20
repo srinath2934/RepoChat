@@ -136,8 +136,10 @@ sequenceDiagram
 Looking for a quick tour? Check out the live agent recording:
 
 <div align="center">
-  <video src="https://raw.githubusercontent.com/srinath2934/RepoChat/main/docs/demo_recording.mp4" width="100%" controls muted>
-  </video>
+  <a href="https://github.com/srinath2934/RepoChat/raw/main/docs/demo_recording.mp4">
+    <img src="docs/video_thumbnail.png" width="100%" alt="Watch the RepoChat Demo">
+  </a>
+  <p><i>(Click the image above to play the full walkthrough video)</i></p>
 </div>
 
 ---
