@@ -107,22 +107,43 @@ class EndeeVectorEngine:
             )
             
             if response.status_code == 200:
-                # If the server sends msgpack, we'd need to unpack it.
-                # For now, let's assume JSON or handle the response accordingly.
-                # If Content-Type is msgpack, we use msgpack.unpackb(response.content)
                 import msgpack
-                results = msgpack.unpackb(response.content)
+                # Endee typically returns a list of results when using the /search endpoint
+                try:
+                    results = msgpack.unpackb(response.content)
+                except Exception:
+                    # Fallback to JSON if msgpack fails
+                    results = response.json()
+                
+                # If results is a dict (some engine versions return {"results": [...]})
+                if isinstance(results, dict) and "results" in results:
+                    results = results["results"]
                 
                 formatted_results = []
                 for res in results:
-                    # Endee ResultSet item structure
-                    meta_str = res.get('meta', '{}')
-                    meta_obj = json.loads(meta_str)
-                    formatted_results.append({
-                        "page_content": meta_obj.get("content", ""),
-                        "metadata": meta_obj.get("metadata", {}),
-                        "score": res.get("distance", 0)
-                    })
+                    # Endee ResultSet item structure: 'meta' or 'metadata' or 'm'
+                    # The engine typically returns a string for meta
+                    meta_raw = res.get('meta') or res.get('metadata') or res.get('m') or "{}"
+                    
+                    try:
+                        # If it's already a dict (some versions), use it. Otherwise parse.
+                        meta_obj = meta_raw if isinstance(meta_raw, dict) else json.loads(meta_raw)
+                        
+                        # Extract content and metadata from our standardized upsert format
+                        content = meta_obj.get("content") or meta_obj.get("page_content") or ""
+                        
+                        # Use the entire meta_obj as metadata if our nested structure isn't found
+                        metadata = meta_obj.get("metadata") or meta_obj
+                        
+                        formatted_results.append({
+                            "page_content": content,
+                            "metadata": metadata,
+                            "score": res.get("distance", res.get("score", 0))
+                        })
+                    except Exception as e:
+                        logger.warning(f"Could not parse metadata for a result: {e}")
+                        continue
+                        
                 return formatted_results
             return []
         except Exception as e:
