@@ -28,11 +28,25 @@ The system leverages:
 
 ```mermaid
 graph TD
-    A[User Query] --> B[Embedding Model (Sentence-BERT)]
-    B --> C[Endee Vector Database]
-    C --> D[Top-K Retrieval]
-    D --> E[LLM (Response Generation)]
-    E --> F[Answer with Code Context]
+    A[GitHub Repo] -->|Fetch| B(GitHub Loader)
+    B -->|Raw Code| C{Document Processor}
+    C -->|AST Splitting| D[Logical Code Chunks]
+    D -->|Embeddings API| E(HuggingFace Cloud)
+    E -->|Vectors| F[(Endee C++ Engine)]
+    
+    User[User Question] -->|Semantic Search| F
+    F -->|Top-K Context| G[Prompt Generator]
+    G -->|Augmented Prompt| H[Groq Llama 3.3]
+    H -->|Streaming Answer| UI[Streamlit UI]
+    
+    subgraph "Local Infrastructure (Docker)"
+    F
+    end
+    
+    subgraph "Cloud Ecosystem"
+    E
+    H
+    end
 ```
 
 ---
