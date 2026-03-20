@@ -121,27 +121,43 @@ class EndeeVectorEngine:
                 
                 formatted_results = []
                 for res in results:
-                    # Endee ResultSet item structure: 'meta' or 'metadata' or 'm'
-                    # The engine typically returns a string for meta
-                    meta_raw = res.get('meta') or res.get('metadata') or res.get('m') or "{}"
+                    # Endee returns a list for each result: [distance, id, meta, ...]
+                    # or it returns a dict. We handle both.
+                    
+                    if isinstance(res, list):
+                        # Typcial Endee List format: [distance, id, meta]
+                        # Based on our inspect: [float, val, val, json_str]
+                        try:
+                            # We look for the JSON string in the list
+                            meta_raw = "{}"
+                            for item in res:
+                                if isinstance(item, str) and item.startswith('{"'):
+                                    meta_raw = item
+                                    break
+                            score = res[0] if len(res) > 0 else 0
+                        except Exception:
+                            meta_raw = "{}"
+                            score = 0
+                    else:
+                        # Fallback for dictionary format
+                        meta_raw = res.get('meta') or res.get('metadata') or res.get('m') or "{}"
+                        score = res.get("distance", res.get("score", 0))
                     
                     try:
-                        # If it's already a dict (some versions), use it. Otherwise parse.
-                        meta_obj = meta_raw if isinstance(meta_raw, dict) else json.loads(meta_raw)
+                        # Parse the JSON string
+                        meta_obj = json.loads(meta_raw) if isinstance(meta_raw, str) else meta_raw
                         
-                        # Extract content and metadata from our standardized upsert format
+                        # Extract content and metadata
                         content = meta_obj.get("content") or meta_obj.get("page_content") or ""
-                        
-                        # Use the entire meta_obj as metadata if our nested structure isn't found
                         metadata = meta_obj.get("metadata") or meta_obj
                         
                         formatted_results.append({
                             "page_content": content,
                             "metadata": metadata,
-                            "score": res.get("distance", res.get("score", 0))
+                            "score": score
                         })
                     except Exception as e:
-                        logger.warning(f"Could not parse metadata for a result: {e}")
+                        logger.warning(f"Could not parse result: {e}")
                         continue
                         
                 return formatted_results
