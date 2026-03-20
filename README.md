@@ -135,7 +135,10 @@ sequenceDiagram
 
 Looking for a quick tour? Check out the live agent recording:
 
-[Watch the Demo Walkthrough Video 🎥](docs/demo_recording.mp4)
+<video width="100%" controls>
+  <source src="https://github.com/srinath2934/RepoChat/raw/main/docs/demo_recording.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 ---
 
