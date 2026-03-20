@@ -135,7 +135,7 @@ sequenceDiagram
 
 Looking for a quick tour? Check out the live agent recording:
 
-https://github.com/srinath2934/RepoChat/raw/main/docs/demo_recording.mp4
+![Demo Walkthrough Video](docs/demo_recording.mp4)
 
 ---
 
