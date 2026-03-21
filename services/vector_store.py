@@ -17,8 +17,11 @@ class EndeeVectorEngine:
     - Scalable vector management for large-scale RAG.
     """
     
-    def __init__(self, host: str = "http://localhost:9999", auth_token: str = ""):
-        self.host = host.rstrip('/')
+    def __init__(self, host: str = None, auth_token: str = ""):
+        import os
+        # Prioritize ENDEE_HOST environment variable for cloud deployment
+        env_host = os.environ.get("ENDEE_HOST")
+        self.host = (host or env_host or "http://localhost:9999").rstrip('/')
         self.auth_token = auth_token
         self.headers = {
             "Content-Type": "application/json"
